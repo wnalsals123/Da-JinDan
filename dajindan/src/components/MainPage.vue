@@ -3,7 +3,7 @@
   <div class="jindan-wrap">
     <div v-if="diagnostic === 'main'" class="inner-wrap">
       <div class = "title">
-        <sapn>다-진단 종합 자가 진단</sapn>
+        <span>다-진단 종합 자가 진단</span>
       </div>
       <div class="menu-grid">
         <div class="tiles" v-for="(item, i) in diagnosticList" :key = i>
@@ -23,13 +23,13 @@
 import DiagnosticsPage from './DiagnosticsPage.vue'
 
 export default {
-  name: 'HelloWorld',
+  name: 'MainPage',
   components: {
     DiagnosticsPage
   },
   data() {
     return {
-      diagnosticList : [ "PHQ-9(우울증)", "조울증", "조현병", "PTSD", "알코올중독", "ADHD", "", "", "" ],
+      diagnosticList: [ "PHQ-9(우울증)", "조울증", "조현병", "PTSD", "알코올중독", "ADHD", "", "", "" ],
       diagnostic: "main"
     }
   },
@@ -43,7 +43,7 @@ export default {
     }
   },
   props: {
-    msg: String
+    
   }
 }
 
