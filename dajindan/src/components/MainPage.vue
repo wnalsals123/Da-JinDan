@@ -11,9 +11,7 @@
         </div>
       </div>
     </div>
-    <div v-else class="inner-wrap">
-      <DiagnosticsPage :diagnosticName="diagnostic"></DiagnosticsPage>
-    </div>
+    <DiagnosticsPage v-else class="inner-wrap" :diagnosticName="diagnostic" @setDiagnostic="setDiagnostic"></DiagnosticsPage>
   </div>
 
 </template>
@@ -34,8 +32,8 @@ export default {
     }
   },
   methods: {
-    setDiagnostic(string) {
-      this.diagnostic = string
+    setDiagnostic(diagnostic) {
+      this.diagnostic = diagnostic
     },
     toDiagnosticsPage(item) {
       if(item === '') return
@@ -55,7 +53,7 @@ export default {
 .jindan-wrap {
   display: flex;
   width: 70%;
-  height: 80%;
+  height: 85%;
   background-color: white;
   border-radius: 10px;
 }
@@ -70,7 +68,7 @@ export default {
 
 .title {
   border-radius: 10px;
-  background-color: #57687c;
+  background-color: #2c3e50;
   padding: 1rem;
   color: white;
   text-align: center;
