@@ -17,9 +17,12 @@
 
     <div class="contour"></div>
 
-    <div class="questionWrap">
+    <div class="questionWrap" :class="{ bordering: isNoChoose }">
       <div class="answerList" :class="{ answerClick: isClickItem === i }" v-for="선택옵션, i in getOptions()" :key="선택옵션">
         <button @click="answerItem(i)">{{선택옵션}}</button>
+      </div>
+      <div v-if="isNoChoose" class="noChoose">
+        <span>문항을 선택해 주세요</span>
       </div>
     </div>
 
@@ -44,6 +47,8 @@
         </svg>
       </button>
     </div>
+
+    <CustomModal v-if="modalVis" @toMainEmit="toMainEmit" @setModalHidden="setModalHidden" :moodalOption="moodalOption"></CustomModal>
   </div>
 
 </template>
@@ -51,9 +56,10 @@
 <script>
 
 import DData from '../assets/DData.json'
+import CustomModal from './CustomModal.vue'
 
 export default {
-  name: 'DiagnosticsPage',
+  name: "DiagnosticsPage",
   data() {
     return {
       jindanData: DData,
@@ -61,7 +67,12 @@ export default {
       maxNumber: 9,
       isClickItem: 99,
       diagnosticID: this.getdiagnosticID(),
-    }
+      modalVis: false,
+      moodalOption: {
+        msg: '',
+      },
+      isNoChoose: false
+    };
   },
   props: {
     diagnosticName: String,
@@ -69,47 +80,76 @@ export default {
   methods: {
     nextQuestions() {
       if (this.currentQNumber + 1 >= this.jindanData.PHQ.length) {
-        alert("결과를 확인하시겠습니까?")
+        this.moodalOption.msg = "결과를 확인하시겠습니까?"
+        this.modalVis = true
         return
       }
-      this.currentQNumber++
+      if(this.isClickItem === 99) {
+        this.isNoChoose = true
+        return
+      }
+      this.currentQNumber++;
+      this.isClickItem = 99
     },
     previousQuestions() {
       if (this.currentQNumber - 1 < 0) {
-        alert("첫번째 항목입니다!")
-        return
+        alert("첫번째 항목입니다!");
+        return;
       }
-      this.currentQNumber--
+      this.currentQNumber--;
+      this.isClickItem = 99
     },
     toMainMenu() {
-      this.$emit("setDiagnostic", "main")
+      this.moodalOption.msg = "진행중인 진단이 있습니다.\n정말로 나가시겠습니까?"
+      this.modalVis = true
     },
     answerItem(index) {
-      if(this.isClickItem === index) {
-        this.isClickItem = 99
-        return
+      if (this.isClickItem === index) {
+        this.isClickItem = 99;
+        return;
       }
-      this.isClickItem = index
+      this.isNoChoose = false
+      this.isClickItem = index;
     },
     getdiagnosticID() {
-      if(this.diagnosticName === 'PHQ-9(우울증)') return 'PHQ'
-      else return 'unknown'
+      if (this.diagnosticName === "PHQ-9(우울증)")
+        return "PHQ";
+      else
+        return "unknown";
     },
     getQuestions() {
-      if(this.diagnosticID === 'unknown') return "데이터 불러오기 실패"
-      else return this.jindanData[this.diagnosticID][this.currentQNumber].questions
+      if (this.diagnosticID === "unknown")
+        return "데이터 불러오기 실패";
+      else
+        return this.jindanData[this.diagnosticID][this.currentQNumber].questions;
     },
     getOptions() {
-      if(this.diagnosticID === 'unknown') return "데이터 불러오기 실패"
-      else return this.jindanData[this.diagnosticID][this.currentQNumber].options
+      if (this.diagnosticID === "unknown")
+        return "데이터 불러오기 실패";
+      else
+        return this.jindanData[this.diagnosticID][this.currentQNumber].options;
+    },
+    setModalHidden(aciton) {
+      this.modalVis = aciton
+    },
+    toMainEmit() {
+      this.$emit("setDiagnostic", 'main')
     }
   },
+  components: {
+    CustomModal
+  }
 }
 
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+.hidden {
+  display: none;
+}
+
 .title {
   display: flex;
   justify-content: space-between;
@@ -153,9 +193,25 @@ export default {
 }
 
 .questionWrap {
+  position: relative;
   display: grid;
   flex-grow: 1;
   gap: 1rem;
+}
+
+.noChoose {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #E9967A;
+  border-radius: 5px;
+  color: white;
+  padding: 0.2rem;
+}
+
+.bordering {
+  border: 2px solid #E9967A;
+  border-radius: 10px;
 }
 
 .answerList button {
