@@ -12,6 +12,7 @@
       </div>
     </div>
     <DiagnosticsPage v-else class="inner-wrap" :diagnosticName="diagnostic" @setDiagnostic="setDiagnostic"></DiagnosticsPage>
+    <CustomModal v-if="modalVis" @toWhere="toMain" @setModalHidden="setModalHidden" :moodalOption="moodalOption"></CustomModal>
   </div>
 
 </template>
@@ -19,16 +20,25 @@
 <script>
 
 import DiagnosticsPage from './DiagnosticsPage.vue'
+import CustomModal from './CustomModal.vue'
 
 export default {
   name: 'MainPage',
   components: {
-    DiagnosticsPage
+    DiagnosticsPage,
+    CustomModal
   },
   data() {
     return {
       diagnosticList: [ "PHQ-9(우울증)", "조울증", "조현병", "PTSD", "알코올중독", "ADHD", "", "", "" ],
-      diagnostic: "main"
+      diagnostic: "main",
+      modalVis: false,
+      moodalOption: {
+        msg: '업데이트 예정입니다.',
+        selection: [
+          { buttonMsg: "기대돼요!", buttonAction: false },
+        ]
+      }
     }
   },
   methods: {
@@ -37,7 +47,17 @@ export default {
     },
     toDiagnosticsPage(item) {
       if(item === '') return
+      if(item !== 'PHQ-9(우울증)') {
+        this.modalVis = true
+        return
+      }      
       this.setDiagnostic(item)
+    },
+    toMain() {
+      this.setDiagnostic("main")
+    },
+    setModalHidden(aciton) {
+      this.modalVis = aciton
     }
   },
   props: {

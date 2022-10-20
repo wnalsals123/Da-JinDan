@@ -5,8 +5,8 @@
       <div class="modalContent">
         <span>{{moodalOption.msg}}</span>
         <div class="modalButtonWrap">
-          <button @click="buttonAction(true)">네</button>
-          <button @click="buttonAction(false)">아니오</button>
+          <button v-for="(선택지, i) in moodalOption.selection" :key="선택지"
+            @click="buttonAction(선택지.buttonAction, i)">{{선택지.buttonMsg}}</button>
         </div>
       </div>
     </div>
@@ -20,15 +20,25 @@ export default {
   name: 'CustomModal',
   data() {
     return {
-      
+
     }
   },
   props: {
     moodalOption: Object
   },
   methods: {
-    buttonAction(action) {
-      action ? this.$emit('toMainEmit') : this.$emit('setModalHidden', false)
+    buttonAction(action, test) {
+      console.log(this.moodalOption, action, test)
+      if (this.moodalOption.msg === "결과를 확인하시겠습니까?") {
+        if (action) {
+          this.$emit('setResult', true)
+          this.$emit('setModalHidden', false)
+        } else {
+          this.$emit('setModalHidden', false)
+        }
+        return
+      }
+      action ? this.$emit('toWhere') : this.$emit('setModalHidden', false)
     }
   },
 }
@@ -37,7 +47,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
 .modalWrap {
   display: flex;
   justify-content: center;
@@ -72,5 +81,4 @@ export default {
 .modalButtonWrap button {
   margin-left: 0.5rem;
 }
-
 </style>
