@@ -1,2 +1,2 @@
-# Da-JinDan
-뷰를 이용한 자가 진단 페이지
+# 뷰를 이용한 자가 진단 페이지
+### Demo page : <a href="https://da-jindan.netlify.app/" target="_blank">Da-JinDan</a>[![Netlify Status](https://api.netlify.com/api/v1/badges/b89e5b0f-1960-4e5a-9d81-43fb3859ef55/deploy-status)](https://app.netlify.com/sites/da-jindan/deploys)
